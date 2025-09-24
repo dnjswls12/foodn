@@ -1,0 +1,6 @@
+---
+description: Apply these foundational principles and practices whenever generating, reviewing, or refactoring code across any project or language, unless overridden by more specific project or language rules. This reflects the baseline standard for quality, maintainability, and collaboration expected in our engineering organization.
+
+globs:
+alwaysApply: true
+---
