@@ -1,0 +1,344 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "프로젝트 환경 설정 및 초기 구조",
+      "description": "Next.js 14 App Router와 TypeScript를 기반으로 프로젝트 기본 구조를 설정하고 필요한 dependencies를 설치한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [],
+      "details": "- Next.js 14 App Router 프로젝트 초기 설정\n- TypeScript 설정\n- 필요한 라이브러리 설치 (tailwindcss, shadcn/ui 등)\n- 프로젝트 폴더 구조 설정\n- 환경변수 설정 (.env.local)\n- prettier, eslint 설정",
+      "testStrategy": "npm run dev로 프로젝트가 정상적으로 시작되는지 확인",
+      "subtasks": [
+        {
+          "id": "1.1",
+          "title": "Next.js 프로젝트 초기 설정",
+          "description": "Next.js 14 App Router 기반 TypeScript 프로젝트를 생성하고 기본 설정을 완료한다.",
+          "status": "pending",
+          "dependencies": [],
+          "details": "- npx create-next-app@latest 실행 (App Router, TypeScript 옵션)\n- package.json 확인 및 수정\n- next.config.ts 기본 설정\n- tsconfig.json 설정 최적화"
+        },
+        {
+          "id": "1.2",
+          "title": "UI 라이브러리 및 스타일링 설정",
+          "description": "TailwindCSS와 shadcn/ui를 설치하고 설정한다.",
+          "status": "pending",
+          "dependencies": ["1.1"],
+          "details": "- TailwindCSS 설치 및 설정\n- shadcn/ui 초기화 및 기본 컴포넌트 설치\n- 글로벌 CSS 파일 설정\n- 다크모드 설정 (선택사항)"
+        },
+        {
+          "id": "1.3",
+          "title": "개발 도구 및 코드 품질 설정",
+          "description": "ESLint, Prettier, 환경변수 등 개발 환경을 설정한다.",
+          "status": "pending",
+          "dependencies": ["1.1"],
+          "details": "- .env.local 파일 생성 및 예시 작성\n- .env.example 파일 생성\n- prettier 설정 파일 작성\n- ESLint 규칙 커스터마이징\n- .gitignore 파일 검토"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Supabase 프로젝트 설정 및 연동",
+      "description": "Supabase 프로젝트를 생성하고 Next.js 애플리케이션과 연동 설정을 완료한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [1],
+      "details": "- Supabase 프로젝트 생성\n- Database 설정\n- API Keys 설정\n- @supabase/supabase-js 라이브러리 설치 및 설정\n- Supabase 클라이언트 초기화\n- 환경변수에 Supabase URL과 anon key 추가",
+      "testStrategy": "Supabase 클라이언트 연결 테스트 및 기본 쿼리 동작 확인",
+      "subtasks": [
+        {
+          "id": "2.1",
+          "title": "Supabase 프로젝트 생성 및 설정",
+          "description": "Supabase 대시보드에서 새 프로젝트를 생성하고 기본 설정을 완료한다.",
+          "status": "pending",
+          "dependencies": [],
+          "details": "- Supabase 계정 생성 및 로그인\n- 새 프로젝트 생성\n- 데이터베이스 비밀번호 설정\n- 프로젝트 URL 및 API 키 확인\n- 프로젝트 설정 검토"
+        },
+        {
+          "id": "2.2",
+          "title": "Supabase 클라이언트 라이브러리 설치 및 초기화",
+          "description": "Next.js 프로젝트에 Supabase 클라이언트를 설치하고 초기화한다.",
+          "status": "pending",
+          "dependencies": ["2.1"],
+          "details": "- @supabase/supabase-js 라이브러리 설치\n- lib/supabase.ts 파일 생성\n- createClient로 Supabase 클라이언트 초기화\n- 환경변수 (.env.local)에 SUPABASE_URL, SUPABASE_ANON_KEY 추가"
+        },
+        {
+          "id": "2.3",
+          "title": "Supabase 연결 테스트",
+          "description": "Supabase 클라이언트 연결을 테스트하고 기본 쿼리 동작을 확인한다.",
+          "status": "pending",
+          "dependencies": ["2.2"],
+          "details": "- 테스트 페이지 또는 API 라우트 생성\n- Supabase 클라이언트 연결 상태 확인\n- 기본 테이블 쿼리 테스트\n- 에러 처리 확인"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "데이터베이스 스키마 설계 및 생성",
+      "description": "식단 기록을 위한 데이터베이스 테이블 스키마를 설계하고 Supabase에서 생성한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [2],
+      "details": "- users 테이블 (Supabase Auth 연동)\n- food_logs 테이블 설계\n- RLS (Row Level Security) 정책 설정\n- 인덱스 설정",
+      "testStrategy": "테이블 생성 확인 및 기본 CRUD 쿼리 테스트"
+    },
+    {
+      "id": 4,
+      "title": "Supabase Storage 설정",
+      "description": "업로드된 음식 이미지를 저장할 Supabase Storage 버킷을 설정한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [2],
+      "details": "- 'food-images' 버킷 생성\n- 공개 액세스 정책 설정\n- 파일 업로드 제한 설정 (이미지 파일만, 최대 5MB)\n- RLS 정책 설정 (사용자별 접근 제어)",
+      "testStrategy": "이미지 파일 업로드 및 URL 접근 테스트"
+    },
+    {
+      "id": 5,
+      "title": "사용자 인증 시스템 구현",
+      "description": "Supabase Auth를 사용한 이메일 기반 회원가입 및 로그인 시스템을 구현한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [2],
+      "details": "- Supabase Auth 설정\n- 회원가입 페이지 및 컴포넌트 구현\n- 로그인 페이지 및 컴포넌트 구현\n- 로그아웃 기능 구현\n- AuthContext 생성 및 Provider 설정\n- 인증 상태 관리\n- 보호된 라우트 구현\n- 인증 관련 타입 정의",
+      "testStrategy": "회원가입, 로그인, 로그아웃, 인증 상태 유지 테스트",
+      "subtasks": [
+        {
+          "id": "5.1",
+          "title": "Supabase Auth 설정 및 타입 정의",
+          "description": "Supabase Auth 기본 설정과 TypeScript 타입을 정의한다.",
+          "status": "pending",
+          "dependencies": [],
+          "details": "- @supabase/auth-helpers-nextjs 설치\n- Auth 타입 정의 (User, Session, AuthError)\n- Supabase 클라이언트에 Auth 설정 추가\n- Auth 관련 환경변수 설정"
+        },
+        {
+          "id": "5.2",
+          "title": "AuthContext 및 Provider 구현",
+          "description": "전역 인증 상태 관리를 위한 Context와 Provider를 구현한다.",
+          "status": "pending",
+          "dependencies": ["5.1"],
+          "details": "- createContext로 AuthContext 생성\n- AuthProvider 컴포넌트 구현\n- useAuth 커스텀 훅 구현\n- 인증 상태 변화 감지 및 업데이트\n- 로딩 상태 관리"
+        },
+        {
+          "id": "5.3",
+          "title": "회원가입 페이지 및 컴포넌트 구현",
+          "description": "이메일 기반 회원가입 UI와 로직을 구현한다.",
+          "status": "pending",
+          "dependencies": ["5.2"],
+          "details": "- /signup 페이지 생성\n- 회원가입 폼 컴포넌트 구현\n- 이메일/비밀번호 유효성 검사\n- signUp 함수 구현\n- 에러 처리 및 사용자 피드백\n- 이메일 인증 안내 UI"
+        },
+        {
+          "id": "5.4",
+          "title": "로그인 페이지 및 컴포넌트 구현",
+          "description": "이메일 기반 로그인 UI와 로직을 구현한다.",
+          "status": "pending",
+          "dependencies": ["5.2"],
+          "details": "- /login 페이지 생성\n- 로그인 폼 컴포넌트 구현\n- signIn 함수 구현\n- 로그인 실패 에러 처리\n- 비밀번호 재설정 링크\n- 회원가입 페이지로 이동 링크"
+        },
+        {
+          "id": "5.5",
+          "title": "보호된 라우트 및 인증 가드 구현",
+          "description": "인증이 필요한 페이지를 보호하는 라우트 가드를 구현한다.",
+          "status": "pending",
+          "dependencies": ["5.3", "5.4"],
+          "details": "- ProtectedRoute 컴포넌트 구현\n- 미인증 사용자 리다이렉트 로직\n- 인증 로딩 중 스피너 표시\n- 메인 페이지에 인증 가드 적용"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "메인 레이아웃 및 네비게이션 구현",
+      "description": "앱의 기본 레이아웃과 하단 네비게이션을 구현한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [1, 5],
+      "details": "- 모바일 최적화된 메인 레이아웃 컴포넌트\n- 하단 네비게이션 바 구현\n- 반응형 디자인 적용\n- 네비게이션 상태 관리\n- 활성 탭 표시",
+      "testStrategy": "모바일과 데스크톱에서 네비게이션 동작 확인"
+    },
+    {
+      "id": 7,
+      "title": "이미지 업로드 컴포넌트 구현",
+      "description": "카메라 또는 갤러리에서 이미지를 선택하고 업로드할 수 있는 컴포넌트를 구현한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [4, 6],
+      "details": "- 파일 선택 인터페이스 구현 (카메라/갤러리)\n- 이미지 미리보기 기능\n- 이미지 크기 제한 및 압축\n- Supabase Storage 업로드 함수 구현\n- 업로드 진행 상태 표시\n- 에러 처리 및 사용자 피드백\n- 모바일 기기 최적화",
+      "testStrategy": "다양한 기기에서 이미지 선택 및 업로드 테스트",
+      "subtasks": [
+        {
+          "id": "7.1",
+          "title": "파일 선택 인터페이스 구현",
+          "description": "카메라와 갤러리에서 이미지를 선택할 수 있는 UI를 구현한다.",
+          "status": "pending",
+          "dependencies": [],
+          "details": "- input type=\"file\" 커스터마이징\n- accept=\"image/*\" 설정\n- capture=\"environment\" 모바일 카메라 접근\n- 파일 선택 버튼 스타일링\n- 드래그 앤 드롭 기능 (데스크톱)"
+        },
+        {
+          "id": "7.2",
+          "title": "이미지 미리보기 및 검증",
+          "description": "선택된 이미지의 미리보기와 파일 검증을 구현한다.",
+          "status": "pending",
+          "dependencies": ["7.1"],
+          "details": "- 이미지 미리보기 컴포넌트\n- 파일 타입 검증 (이미지만 허용)\n- 파일 크기 제한 (5MB)\n- 이미지 리사이징/압축 (선택사항)\n- 에러 메시지 표시"
+        },
+        {
+          "id": "7.3",
+          "title": "Supabase Storage 업로드 함수",
+          "description": "이미지를 Supabase Storage에 업로드하는 함수를 구현한다.",
+          "status": "pending",
+          "dependencies": ["7.2"],
+          "details": "- uploadImage 함수 구현\n- 파일명 생성 로직 (UUID + timestamp)\n- 업로드 진행률 표시\n- 에러 처리 및 재시도 로직\n- 업로드 완료 후 URL 반환"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "n8n 웹훅 연동 서비스 구현",
+      "description": "이미지와 사용자 ID를 n8n 웹훅으로 전송하는 API 및 클라이언트 서비스를 구현한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [7],
+      "details": "- n8n 웹훅 URL 환경변수 설정\n- multipart/form-data로 이미지 전송하는 API 함수 구현\n- 사용자 ID와 이미지 파일을 포함한 요청 구성\n- n8n 응답 처리 (성공/실패)\n- 응답 타입 정의 (TypeScript interfaces)\n- 에러 처리 및 재시도 로직\n- 타임아웃 설정",
+      "testStrategy": "n8n 웹훅으로 이미지 전송 및 응답 수신 테스트",
+      "subtasks": [
+        {
+          "id": "8.1",
+          "title": "n8n 웹훅 API 타입 정의",
+          "description": "n8n 웹훅 요청/응답에 대한 TypeScript 타입을 정의한다.",
+          "status": "pending",
+          "dependencies": [],
+          "details": "- 웹훅 요청 타입 정의\n- AI 분석 결과 응답 타입 정의\n- 에러 응답 타입 정의\n- 영양성분 정보 타입 정의\n- API 응답 validation 스키마"
+        },
+        {
+          "id": "8.2",
+          "title": "웹훅 전송 함수 구현",
+          "description": "이미지와 사용자 ID를 n8n 웹훅으로 전송하는 함수를 구현한다.",
+          "status": "pending",
+          "dependencies": ["8.1"],
+          "details": "- FormData로 multipart/form-data 구성\n- fetch API를 사용한 POST 요청\n- 환경변수에서 웹훅 URL 가져오기\n- 타임아웃 설정 (30초)\n- 요청 헤더 설정"
+        },
+        {
+          "id": "8.3",
+          "title": "응답 처리 및 에러 핸들링",
+          "description": "n8n 웹훅 응답을 처리하고 에러를 적절히 핸들링한다.",
+          "status": "pending",
+          "dependencies": ["8.2"],
+          "details": "- 성공 응답 파싱 및 검증\n- 에러 응답 처리\n- 네트워크 에러 처리\n- 재시도 로직 구현 (최대 3회)\n- 사용자 친화적 에러 메시지 생성"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "식단 기록 메인 페이지 구현",
+      "description": "원클릭으로 식단을 기록할 수 있는 메인 페이지를 구현한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [8],
+      "details": "- 중앙의 '식단 기록하기' 버튼/아이콘 디자인\n- 이미지 선택 즉시 업로드 및 n8n 전송 플로우 구현\n- 로딩 상태 UI (progress indicator, skeleton 등)\n- 성공/실패 알림 처리\n- 'Frictionless Logging' 철학에 맞는 UX 구현\n- 백그라운드에서 처리되는 동안의 사용자 경험 최적화",
+      "testStrategy": "전체 플로우 테스트: 이미지 선택 → 업로드 → n8n 전송 → 결과 표시",
+      "subtasks": [
+        {
+          "id": "9.1",
+          "title": "메인 페이지 UI 구현",
+          "description": "식단 기록 메인 페이지의 UI를 구현한다.",
+          "status": "pending",
+          "dependencies": [],
+          "details": "- 중앙 배치된 '식단 기록하기' 버튼\n- 직관적인 아이콘 및 텍스트\n- 모바일 친화적인 터치 영역\n- 간단한 사용법 안내 텍스트\n- 최근 기록 미리보기 (선택사항)"
+        },
+        {
+          "id": "9.2",
+          "title": "원클릭 기록 플로우 구현",
+          "description": "이미지 선택부터 기록 완료까지의 전체 플로우를 구현한다.",
+          "status": "pending",
+          "dependencies": ["9.1"],
+          "details": "- 버튼 클릭 → 이미지 선택 → 즉시 처리 플로우\n- 사용자 추가 입력 없이 자동 진행\n- 백그라운드 처리 구현\n- 각 단계별 상태 관리"
+        },
+        {
+          "id": "9.3",
+          "title": "로딩 및 피드백 UI 구현",
+          "description": "처리 중 로딩 상태와 결과 피드백 UI를 구현한다.",
+          "status": "pending",
+          "dependencies": ["9.2"],
+          "details": "- 업로드 중 프로그레스 표시\n- AI 분석 중 로딩 애니메이션\n- 성공 시 간단한 성공 메시지\n- 실패 시 에러 메시지 및 재시도 옵션\n- 처리 시간 예상 안내"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "식단 데이터 조회 API 구현",
+      "description": "Supabase에서 사용자의 식단 기록을 조회하는 API를 구현한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [3, 5],
+      "details": "- 날짜별 식단 조회 함수 구현\n- 끼니별(아침/점심/저녁/간식) 필터링\n- 사용자별 데이터 보안 (RLS 활용)\n- 페이지네이션 구현\n- 총 칼로리 및 영양성분 합계 계산\n- 캐싱 전략 구현 (React Query 또는 SWR)\n- 타입스크립트 인터페이스 정의",
+      "testStrategy": "다양한 조건으로 식단 데이터 조회 및 성능 테스트"
+    },
+    {
+      "id": 11,
+      "title": "식단 대시보드 페이지 구현",
+      "description": "사용자의 식단 기록을 날짜별, 끼니별로 보여주는 대시보드를 구현한다.",
+      "status": "pending",
+      "priority": "high",
+      "dependencies": [10],
+      "details": "- 날짜 선택 컴포넌트 (캘린더)\n- 끼니별 탭 또는 섹션 구분\n- 식단 아이템 카드 컴포넌트\n- 일일 총 칼로리 및 영양성분 요약\n- 무한 스크롤 또는 페이지네이션\n- 로딩 및 에러 상태 처리",
+      "testStrategy": "대시보드에서 식단 데이터 표시 및 인터랙션 테스트"
+    },
+    {
+      "id": 12,
+      "title": "식단 상세 정보 컴포넌트 구현",
+      "description": "개별 식단 기록의 상세 정보를 보여주는 컴포넌트를 구현한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [11],
+      "details": "- 모달 또는 별도 페이지로 상세 정보 표시\n- 원본 이미지 확대 보기\n- AI 분석 결과 상세 표시\n- 기록 시간 및 끼니 정보\n- 닫기/뒤로가기 기능",
+      "testStrategy": "상세 정보 모달 표시 및 데이터 정확성 확인"
+    },
+    {
+      "id": 13,
+      "title": "에러 처리 및 사용자 피드백 시스템",
+      "description": "전역 에러 처리와 사용자 피드백을 위한 시스템을 구현한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [9, 11],
+      "details": "- 전역 에러 바운더리 구현\n- Toast 알림 시스템 구현\n- n8n 에러 코드별 사용자 친화적 메시지 정의\n- 네트워크 에러 처리\n- 로딩 상태 일관성 관리\n- 오프라인 상태 감지 및 안내\n- 재시도 메커니즘",
+      "testStrategy": "다양한 에러 상황에서 적절한 피드백 표시 확인"
+    },
+    {
+      "id": 14,
+      "title": "모바일 UX 최적화",
+      "description": "모바일 기기에서의 사용자 경험을 최적화한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [12],
+      "details": "- PWA (Progressive Web App) 설정\n- 모바일 뷰포트 및 반응형 디자인 최적화\n- 터치 인터랙션 최적화\n- 로딩 성능 최적화\n- 이미지 압축 및 최적화\n- 캐싱 전략 구현\n- 오프라인 기능 고려",
+      "testStrategy": "다양한 모바일 기기에서 성능 및 UX 테스트"
+    },
+    {
+      "id": 15,
+      "title": "프로토타입 테스트 및 배포",
+      "description": "프로토타입의 전체 기능을 테스트하고 배포 환경을 설정한다.",
+      "status": "pending",
+      "priority": "medium",
+      "dependencies": [13, 14],
+      "details": "- 전체 사용자 플로우 통합 테스트\n- 크로스 브라우저 테스트\n- 성능 테스트 및 최적화\n- Vercel 배포 설정\n- 환경변수 설정 (production)\n- 도메인 연결 (선택사항)\n- 모니터링 및 로그 설정",
+      "testStrategy": "프로덕션 환경에서 전체 기능 동작 확인"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "createdAt": "2025-01-27T00:00:00Z",
+    "lastModified": "2025-01-27T00:00:00Z",
+    "projectName": "AI 식단 관리 서비스 프로토타입",
+    "description": "원클릭 AI 식단 기록 서비스 프로토타입 개발 태스크"
+  },
+  "tags": {
+    "master": {
+      "name": "master",
+      "description": "Main development tasks",
+      "createdAt": "2025-01-27T00:00:00Z",
+      "taskIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    }
+  },
+  "state": {
+    "currentTag": "master"
+  }
+}

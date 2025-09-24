@@ -1,0 +1,196 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "프로젝트 환경 설정 및 초기 구조",
+        "description": "Next.js 14 App Router와 TypeScript를 기반으로 프로젝트 기본 구조를 설정하고 필요한 dependencies를 설치한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "- Next.js 14 App Router 프로젝트 초기 설정\n- TypeScript 설정\n- 필요한 라이브러리 설치 (tailwindcss, shadcn/ui 등)\n- 프로젝트 폴더 구조 설정\n- 환경변수 설정 (.env.local)\n- prettier, eslint 설정",
+        "testStrategy": "npm run dev로 프로젝트가 정상적으로 시작되는지 확인"
+      },
+      {
+        "id": 2,
+        "title": "Supabase 프로젝트 설정 및 연동",
+        "description": "Supabase 프로젝트를 생성하고 Next.js 애플리케이션과 연동 설정을 완료한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "details": "- Supabase 프로젝트 생성\n- Database 설정\n- API Keys 설정\n- @supabase/supabase-js 라이브러리 설치 및 설정\n- Supabase 클라이언트 초기화\n- 환경변수에 Supabase URL과 anon key 추가",
+        "testStrategy": "Supabase 클라이언트 연결 테스트 및 기본 쿼리 동작 확인"
+      },
+      {
+        "id": 3,
+        "title": "데이터베이스 스키마 설계 및 생성",
+        "description": "식단 기록을 위한 데이터베이스 테이블 스키마를 설계하고 Supabase에서 생성한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "details": "- users 테이블 (Supabase Auth 연동)\n- food_logs 테이블 설계:\n  - id (primary key)\n  - user_id (foreign key to auth.users)\n  - meal_type (아침/점심/저녁/간식)\n  - image_url (Supabase Storage 경로)\n  - ai_analysis_result (JSONB)\n  - total_calories (integer)\n  - nutrients (JSONB)\n  - created_at (timestamp)\n  - updated_at (timestamp)\n- RLS (Row Level Security) 정책 설정\n- 인덱스 설정",
+        "testStrategy": "테이블 생성 확인 및 기본 CRUD 쿼리 테스트"
+      },
+      {
+        "id": 4,
+        "title": "Supabase Storage 설정",
+        "description": "업로드된 음식 이미지를 저장할 Supabase Storage 버킷을 설정한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "details": "- 'food-images' 버킷 생성\n- 공개 액세스 정책 설정\n- 파일 업로드 제한 설정 (이미지 파일만, 최대 5MB)\n- RLS 정책 설정 (사용자별 접근 제어)",
+        "testStrategy": "이미지 파일 업로드 및 URL 접근 테스트"
+      },
+      {
+        "id": 5,
+        "title": "사용자 인증 시스템 구현",
+        "description": "Supabase Auth를 사용한 이메일 기반 회원가입 및 로그인 시스템을 구현한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "details": "- Supabase Auth 설정\n- 회원가입 페이지 및 컴포넌트 구현\n- 로그인 페이지 및 컴포넌트 구현\n- 로그아웃 기능 구현\n- AuthContext 생성 및 Provider 설정\n- 인증 상태 관리\n- 보호된 라우트 구현\n- 인증 관련 타입 정의",
+        "testStrategy": "회원가입, 로그인, 로그아웃, 인증 상태 유지 테스트"
+      },
+      {
+        "id": 6,
+        "title": "메인 레이아웃 및 네비게이션 구현",
+        "description": "앱의 기본 레이아웃과 하단 네비게이션을 구현한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          5
+        ],
+        "details": "- 모바일 최적화된 메인 레이아웃 컴포넌트\n- 하단 네비게이션 바 구현:\n  - 식단 기록 (메인)\n  - 나의 식단 (대시보드)\n  - 설정/프로필\n- 반응형 디자인 적용\n- 네비게이션 상태 관리\n- 활성 탭 표시",
+        "testStrategy": "모바일과 데스크톱에서 네비게이션 동작 확인"
+      },
+      {
+        "id": 7,
+        "title": "이미지 업로드 컴포넌트 구현",
+        "description": "카메라 또는 갤러리에서 이미지를 선택하고 업로드할 수 있는 컴포넌트를 구현한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          4,
+          6
+        ],
+        "details": "- 파일 선택 인터페이스 구현 (카메라/갤러리)\n- 이미지 미리보기 기능\n- 이미지 크기 제한 및 압축\n- Supabase Storage 업로드 함수 구현\n- 업로드 진행 상태 표시\n- 에러 처리 및 사용자 피드백\n- 모바일 기기 최적화 (accept=\"image/*\", capture=\"environment\")",
+        "testStrategy": "다양한 기기에서 이미지 선택 및 업로드 테스트"
+      },
+      {
+        "id": 8,
+        "title": "n8n 웹훅 연동 서비스 구현",
+        "description": "이미지와 사용자 ID를 n8n 웹훅으로 전송하는 API 및 클라이언트 서비스를 구현한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "details": "- n8n 웹훅 URL 환경변수 설정\n- multipart/form-data로 이미지 전송하는 API 함수 구현\n- 사용자 ID와 이미지 파일을 포함한 요청 구성\n- n8n 응답 처리 (성공/실패)\n- 응답 타입 정의 (TypeScript interfaces)\n- 에러 처리 및 재시도 로직\n- 타임아웃 설정",
+        "testStrategy": "n8n 웹훅으로 이미지 전송 및 응답 수신 테스트"
+      },
+      {
+        "id": 9,
+        "title": "식단 기록 메인 페이지 구현",
+        "description": "원클릭으로 식단을 기록할 수 있는 메인 페이지를 구현한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          8
+        ],
+        "details": "- 중앙의 '식단 기록하기' 버튼/아이콘 디자인\n- 이미지 선택 즉시 업로드 및 n8n 전송 플로우 구현\n- 로딩 상태 UI (progress indicator, skeleton 등)\n- 성공/실패 알림 처리\n- 'Frictionless Logging' 철학에 맞는 UX 구현\n- 백그라운드에서 처리되는 동안의 사용자 경험 최적화",
+        "testStrategy": "전체 플로우 테스트: 이미지 선택 → 업로드 → n8n 전송 → 결과 표시"
+      },
+      {
+        "id": 10,
+        "title": "식단 데이터 조회 API 구현",
+        "description": "Supabase에서 사용자의 식단 기록을 조회하는 API를 구현한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          5
+        ],
+        "details": "- 날짜별 식단 조회 함수 구현\n- 끼니별(아침/점심/저녁/간식) 필터링\n- 사용자별 데이터 보안 (RLS 활용)\n- 페이지네이션 구현\n- 총 칼로리 및 영양성분 합계 계산\n- 캐싱 전략 구현 (React Query 또는 SWR)\n- 타입스크립트 인터페이스 정의",
+        "testStrategy": "다양한 조건으로 식단 데이터 조회 및 성능 테스트"
+      },
+      {
+        "id": 11,
+        "title": "식단 대시보드 페이지 구현",
+        "description": "사용자의 식단 기록을 날짜별, 끼니별로 보여주는 대시보드를 구현한다.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          10
+        ],
+        "details": "- 날짜 선택 컴포넌트 (캘린더)\n- 끼니별 탭 또는 섹션 구분\n- 식단 아이템 카드 컴포넌트:\n  - 음식 이미지 썸네일\n  - 음식명 및 칼로리 정보\n  - AI 분석 신뢰도 표시\n- 일일 총 칼로리 및 영양성분 요약\n- 무한 스크롤 또는 페이지네이션\n- 로딩 및 에러 상태 처리",
+        "testStrategy": "대시보드에서 식단 데이터 표시 및 인터랙션 테스트"
+      },
+      {
+        "id": 12,
+        "title": "식단 상세 정보 컴포넌트 구현",
+        "description": "개별 식단 기록의 상세 정보를 보여주는 컴포넌트를 구현한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "details": "- 모달 또는 별도 페이지로 상세 정보 표시\n- 원본 이미지 확대 보기\n- AI 분석 결과 상세 표시:\n  - 개별 음식 목록\n  - 각 음식의 추정 양과 칼로리\n  - 영양성분 상세 정보\n  - AI 신뢰도 스코어\n- 기록 시간 및 끼니 정보\n- 닫기/뒤로가기 기능",
+        "testStrategy": "상세 정보 모달 표시 및 데이터 정확성 확인"
+      },
+      {
+        "id": 13,
+        "title": "에러 처리 및 사용자 피드백 시스템",
+        "description": "전역 에러 처리와 사용자 피드백을 위한 시스템을 구현한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          9,
+          11
+        ],
+        "details": "- 전역 에러 바운더리 구현\n- Toast 알림 시스템 구현\n- n8n 에러 코드별 사용자 친화적 메시지 정의\n- 네트워크 에러 처리\n- 로딩 상태 일관성 관리\n- 오프라인 상태 감지 및 안내\n- 재시도 메커니즘",
+        "testStrategy": "다양한 에러 상황에서 적절한 피드백 표시 확인"
+      },
+      {
+        "id": 14,
+        "title": "모바일 UX 최적화",
+        "description": "모바일 기기에서의 사용자 경험을 최적화한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "details": "- PWA (Progressive Web App) 설정\n- 모바일 뷰포트 및 반응형 디자인 최적화\n- 터치 인터랙션 최적화\n- 로딩 성능 최적화\n- 이미지 압축 및 최적화\n- 캐싱 전략 구현\n- 오프라인 기능 고려",
+        "testStrategy": "다양한 모바일 기기에서 성능 및 UX 테스트"
+      },
+      {
+        "id": 15,
+        "title": "프로토타입 테스트 및 배포",
+        "description": "프로토타입의 전체 기능을 테스트하고 배포 환경을 설정한다.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          13,
+          14
+        ],
+        "details": "- 전체 사용자 플로우 통합 테스트\n- 크로스 브라우저 테스트\n- 성능 테스트 및 최적화\n- Vercel 배포 설정\n- 환경변수 설정 (production)\n- 도메인 연결 (선택사항)\n- 모니터링 및 로그 설정",
+        "testStrategy": "프로덕션 환경에서 전체 기능 동작 확인"
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "createdAt": "2025-01-27T00:00:00Z",
+      "lastModified": "2025-01-27T00:00:00Z",
+      "projectName": "AI 식단 관리 서비스 프로토타입",
+      "description": "원클릭 AI 식단 기록 서비스 프로토타입 개발 태스크"
+    }
+  }
+}
