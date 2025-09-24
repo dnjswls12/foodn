@@ -17,6 +17,8 @@ import {
   Plus,
   BarChart3
 } from 'lucide-react';
+import ImageUpload from '../components/ImageUpload.client';
+import { sendImageToWebhook, validateImageFile } from '../utils/imageUtils';
 
 // 임시 타입 정의
 interface FoodItem {
@@ -57,8 +59,82 @@ export default function DashboardPage() {
   const [recordingStatus, setRecordingStatus] = useState<RecordingStatus>('idle');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [activeTab, setActiveTab] = useState<'record' | 'history'>('record');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [webhookResult, setWebhookResult] = useState<any>(null);
+  const [webhookTestResult, setWebhookTestResult] = useState<any>(null);
+  const [isTestingWebhook, setIsTestingWebhook] = useState(false);
 
-  // 식단 기록 플로우 시뮬레이션
+  // 이미지 선택 핸들러
+  const handleImageSelect = (file: File) => {
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
+      alert(validation.error);
+      return;
+    }
+    setSelectedImage(file);
+    setWebhookResult(null);
+  };
+
+  // 웹훅 전송 핸들러
+  const handleWebhookSend = async (file: File) => {
+    setIsProcessing(true);
+    setRecordingStatus('uploading');
+    
+    try {
+      const result = await sendImageToWebhook(file);
+      
+      if (result.success) {
+        setWebhookResult(result.data);
+        setRecordingStatus('success');
+        
+        // 3초 후 초기화
+        setTimeout(() => {
+          setRecordingStatus('idle');
+          setSelectedImage(null);
+          setWebhookResult(null);
+        }, 5000);
+      } else {
+        setRecordingStatus('error');
+        alert(result.error || '웹훅 전송에 실패했습니다.');
+        
+        setTimeout(() => {
+          setRecordingStatus('idle');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('웹훅 전송 오류:', error);
+      setRecordingStatus('error');
+      alert('네트워크 오류가 발생했습니다.');
+      
+      setTimeout(() => {
+        setRecordingStatus('idle');
+      }, 3000);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // 웹훅 연결 테스트 핸들러
+  const handleWebhookTest = async () => {
+    setIsTestingWebhook(true);
+    try {
+      const response = await fetch('/api/test-webhook');
+      const result = await response.json();
+      setWebhookTestResult(result);
+    } catch (error) {
+      console.error('웹훅 테스트 오류:', error);
+      setWebhookTestResult({
+        success: false,
+        error: '웹훅 테스트 중 오류가 발생했습니다.',
+        details: error instanceof Error ? error.message : String(error)
+      });
+    } finally {
+      setIsTestingWebhook(false);
+    }
+  };
+
+  // 기존 식단 기록 플로우 시뮬레이션 (데모용)
   const handleRecord = async () => {
     try {
       setRecordingStatus('selecting');
@@ -232,24 +308,62 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* 메인 기록 버튼 */}
+            {/* 이미지 업로드 컴포넌트 */}
+            <ImageUpload
+              onImageSelect={handleImageSelect}
+              onWebhookSend={handleWebhookSend}
+              isProcessing={isProcessing}
+            />
+
+            {/* 웹훅 전송 결과 표시 */}
+            {webhookResult && (
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-lg font-bold text-emerald-700 mb-4">✅ 전송 완료!</h3>
+                <div className="bg-emerald-50 rounded-lg p-4">
+                  <p className="text-sm text-emerald-700 mb-2">
+                    <strong>메시지:</strong> {webhookResult.message}
+                  </p>
+                  <p className="text-sm text-emerald-700 mb-2">
+                    <strong>파일명:</strong> {webhookResult.fileInfo?.name}
+                  </p>
+                  <p className="text-sm text-emerald-700 mb-2">
+                    <strong>파일 크기:</strong> {(webhookResult.fileInfo?.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                  <p className="text-sm text-emerald-700">
+                    <strong>전송 시간:</strong> {new Date(webhookResult.fileInfo?.timestamp).toLocaleString('ko-KR')}
+                  </p>
+                  {webhookResult.webhookResponse && (
+                    <details className="mt-3">
+                      <summary className="text-sm text-emerald-600 cursor-pointer hover:text-emerald-800">
+                        웹훅 응답 보기
+                      </summary>
+                      <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto max-h-32">
+                        {webhookResult.webhookResponse}
+                      </pre>
+                    </details>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* 메인 기록 버튼 (데모용) */}
             <div className="bg-white rounded-2xl shadow-lg p-8">
               {recordingStatus === 'idle' ? (
                 <div className="text-center">
                   <div className="mb-6">
                     <button
                       onClick={handleRecord}
-                      className="w-48 h-48 mx-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 rounded-full flex flex-col items-center justify-center text-white transition-all duration-300 transform hover:scale-105 shadow-2xl"
+                      className="w-48 h-48 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full flex flex-col items-center justify-center text-white transition-all duration-300 transform hover:scale-105 shadow-2xl"
                     >
-                      <Camera className="w-16 h-16 mb-4" />
-                      <span className="text-xl font-bold">식단 기록하기</span>
+                      <Brain className="w-16 h-16 mb-4" />
+                      <span className="text-xl font-bold">데모 시뮬레이션</span>
                     </button>
                   </div>
                   <p className="text-gray-600 text-lg">
-                    사진을 선택하면 AI가 자동으로 분석해드려요
+                    AI 분석 플로우를 시뮬레이션 해보세요
                   </p>
                   <p className="text-sm text-gray-500 mt-2">
-                    끼니 분류, 칼로리 계산까지 모든 것이 자동으로!
+                    실제 기능은 위의 이미지 업로드를 사용하세요
                   </p>
                 </div>
               ) : recordingStatus === 'success' ? (
@@ -301,22 +415,92 @@ export default function DashboardPage() {
               )}
             </div>
 
+            {/* 웹훅 테스트 결과 표시 */}
+            {webhookTestResult && (
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className={`text-lg font-bold mb-4 ${webhookTestResult.success ? 'text-emerald-700' : 'text-red-700'}`}>
+                  🔗 웹훅 연결 테스트 결과
+                </h3>
+                <div className={`rounded-lg p-4 ${webhookTestResult.success ? 'bg-emerald-50' : 'bg-red-50'}`}>
+                  <div className="space-y-2">
+                    <p className={`text-sm ${webhookTestResult.success ? 'text-emerald-700' : 'text-red-700'}`}>
+                      <strong>상태:</strong> {webhookTestResult.success ? '✅ 연결 성공' : '❌ 연결 실패'}
+                    </p>
+                    {webhookTestResult.status && (
+                      <p className={`text-sm ${webhookTestResult.success ? 'text-emerald-700' : 'text-red-700'}`}>
+                        <strong>HTTP 상태:</strong> {webhookTestResult.status} {webhookTestResult.statusText}
+                      </p>
+                    )}
+                    <p className={`text-sm ${webhookTestResult.success ? 'text-emerald-700' : 'text-red-700'}`}>
+                      <strong>웹훅 URL:</strong> {webhookTestResult.webhookUrl}
+                    </p>
+                    <p className={`text-sm ${webhookTestResult.success ? 'text-emerald-700' : 'text-red-700'}`}>
+                      <strong>테스트 시간:</strong> {new Date(webhookTestResult.timestamp).toLocaleString('ko-KR')}
+                    </p>
+                    {webhookTestResult.response && (
+                      <details className="mt-3">
+                        <summary className={`text-sm cursor-pointer hover:underline ${webhookTestResult.success ? 'text-emerald-600' : 'text-red-600'}`}>
+                          서버 응답 보기
+                        </summary>
+                        <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto max-h-32">
+                          {webhookTestResult.response}
+                        </pre>
+                      </details>
+                    )}
+                    {webhookTestResult.error && (
+                      <p className="text-sm text-red-700">
+                        <strong>오류:</strong> {webhookTestResult.error}
+                      </p>
+                    )}
+                    {webhookTestResult.details && (
+                      <p className="text-xs text-red-600">
+                        <strong>세부사항:</strong> {webhookTestResult.details}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setWebhookTestResult(null)}
+                    className="mt-3 px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs rounded transition-colors"
+                  >
+                    결과 닫기
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* 사용법 안내 */}
             <div className="bg-gradient-to-r from-blue-50 to-emerald-50 rounded-2xl p-6">
               <h3 className="font-bold text-gray-800 mb-4">💡 이용 가이드</h3>
               <div className="grid md:grid-cols-3 gap-4 text-sm">
                 <div className="flex items-start space-x-3">
                   <div className="w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold text-xs">1</div>
-                  <p className="text-gray-700">버튼을 눌러 음식 사진을 찍거나 선택하세요</p>
+                  <p className="text-gray-700">이미지를 드래그하거나 파일 선택 버튼을 눌러 음식 사진을 업로드하세요</p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-xs">2</div>
-                  <p className="text-gray-700">AI가 자동으로 음식을 분석합니다</p>
+                  <p className="text-gray-700">선택한 이미지를 확인하고 "웹훅으로 전송" 버튼을 클릭하세요</p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold text-xs">3</div>
-                  <p className="text-gray-700">시간에 따라 끼니가 자동 분류됩니다</p>
+                  <p className="text-gray-700">웹훅으로 이미지가 전송되고 처리 결과를 확인할 수 있습니다</p>
                 </div>
+              </div>
+              <div className="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-yellow-800">
+                    <strong>웹훅 URL:</strong> https://dnjswls12.app.n8n.cloud/webhook/8fc40d24-dd43-4231-a261-5c9b1a27fcdf
+                  </p>
+                  <button
+                    onClick={handleWebhookTest}
+                    disabled={isTestingWebhook}
+                    className="px-3 py-1 bg-yellow-200 hover:bg-yellow-300 text-yellow-800 text-xs rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isTestingWebhook ? '테스트 중...' : '연결 테스트'}
+                  </button>
+                </div>
+                <p className="text-xs text-yellow-700">
+                  이미지 파일이 이 URL로 자동 전송됩니다 (n8n 워크플로우)
+                </p>
               </div>
             </div>
           </div>
