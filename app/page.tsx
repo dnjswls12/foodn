@@ -20,10 +20,10 @@ export default function LandingPage() {
             <span className="text-xl font-bold text-gray-900">FoodN</span>
           </div>
           <Link 
-            href="/login"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors inline-block"
+            href="/dashboard"
+            className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 rounded-lg transition-colors inline-block hover:shadow-lg"
           >
-            임시 로그인
+            서비스 시작하기
           </Link>
         </nav>
 
@@ -50,7 +50,8 @@ export default function LandingPage() {
 
             {/* CTA Button */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <button 
+              <Link 
+                href="/dashboard"
                 className="group bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -58,12 +59,15 @@ export default function LandingPage() {
                 <Camera className={`w-6 h-6 transition-transform duration-300 ${isHovered ? 'rotate-12' : ''}`} />
                 <span>식단 기록 시작하기</span>
                 <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
-              </button>
+              </Link>
               
-              <button className="text-gray-600 hover:text-gray-900 font-medium flex items-center space-x-2 transition-colors">
-                <span>서비스 살펴보기</span>
+              <Link 
+                href="/login" 
+                className="text-gray-600 hover:text-gray-900 font-medium flex items-center space-x-2 transition-colors"
+              >
+                <span>로그인</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
 
             {/* Demo Preview */}
@@ -266,13 +270,19 @@ export default function LandingPage() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-emerald-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2">
+            <Link 
+              href="/dashboard"
+              className="bg-white text-emerald-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
+            >
               <Camera className="w-6 h-6" />
               <span>무료로 시작하기</span>
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-emerald-600 transition-colors">
-              더 알아보기
-            </button>
+            </Link>
+            <Link 
+              href="/login"
+              className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-emerald-600 transition-colors text-center"
+            >
+              로그인
+            </Link>
           </div>
         </div>
       </div>

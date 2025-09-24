@@ -3,16 +3,36 @@
 import { useState } from 'react';
 import { Sparkles, Mail, Lock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     // 임시 로그인 로직 - 나중에 Supabase로 교체
     console.log('Login attempt:', { email, password });
-    alert('임시 로그인 성공! (개발 중)');
+    
+    // 임시 지연 시뮬레이션
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // 서비스 페이지로 리다이렉트
+    router.push('/dashboard');
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    
+    // 임시 지연 시뮬레이션
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // 서비스 페이지로 리다이렉트
+    router.push('/dashboard');
   };
 
   return (
@@ -78,10 +98,11 @@ export default function LoginPage() {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span>로그인</span>
-              <ArrowRight className="w-5 h-5" />
+              <span>{isLoading ? '로그인 중...' : '로그인'}</span>
+              {!isLoading && <ArrowRight className="w-5 h-5" />}
             </button>
           </form>
 
@@ -94,10 +115,11 @@ export default function LoginPage() {
 
           {/* Demo Login */}
           <button
-            onClick={() => alert('데모 로그인 (개발 중)')}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
+            onClick={handleDemoLogin}
+            disabled={isLoading}
+            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            데모 계정으로 체험하기
+            {isLoading ? '접속 중...' : '데모 계정으로 체험하기'}
           </button>
 
           {/* Sign Up Link */}
